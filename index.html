@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>/ai.oli - Collectif hybride</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
+            background: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        body.inverted {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .theme-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 1px solid currentColor;
+            color: currentColor;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-switch:hover {
+            background: currentColor;
+            color: var(--bg-color);
+        }
+
+        .tree {
+            font-size: 0.9rem;
+            padding: 20px 0;
+        }
+
+        .node {
+            margin: 5px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .node:hover {
+            opacity: 0.7;
+        }
+
+        .expandable {
+            color: currentColor;
+        }
+
+        .children {
+            display: none;
+            margin-left: 20px;
+            padding-left: 15px;
+            margin-top: 10px;
+        }
+
+        .children.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .description {
+            color: #aaaaaa;
+            font-style: italic;
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+
+        body.inverted .description {
+            color: #666666;
+        }
+
+        .highlight {
+            color: currentColor;
+        }
+
+        .ai-agent {
+            color: currentColor;
+        }
+
+        .artist {
+            color: currentColor;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid currentColor;
+            opacity: 0.5;
+            text-align: center;
+            color: currentColor;
+            font-size: 0.8rem;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .footer {
+                margin-top: 40px;
+                text-align: center;
+                color: currentColor;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tree">
+            <div class="node expandable" data-target="main">
+                <span class="highlight">/ai.oli</span>
+            </div>
+            <div class="children" id="main">
+                <div class="node expandable" data-target="collectif">
+                    ├── <span class="highlight">collectif hybride</span>
+                </div>
+                <div class="children" id="collectif">
+                    <div class="description">        // artists.oli + ai.agents réunis</div>
+                    <div class="description">        // l'IA filtre le bruit digital, orchestre la présence en ligne et gère la prospection</div>
+                    <div class="description">        // les artistes se consacrent à l'essentiel :</div>
+                    <div class="description">        // le processus créatif, l'expérimentation et la relation humaine</div>
+                    <div class="description">        // → IA = réseaux, prospection, bruit digital</div>
+                    <div class="description">        // → humain = création, exploration, dialogue</div>
+                    
+                    <div class="node expandable" data-target="artists" style="margin-top: 20px;">
+                        ├── <span class="artist">artists.oli</span>
+                    </div>
+                    <div class="children" id="artists">
+                        <div class="description">        // membres humains du collectif</div>
+                        <div class="node artist">        ├── corentin.oli   // bio, compétences, logiciels à préciser</div>
+                        <div class="node artist">        └── victor.oli     // bio, compétences, logiciels à préciser</div>
+                    </div>
+
+                    <div class="node expandable" data-target="agents">
+                        └── <span class="ai-agent">ai.agents</span>
+                    </div>
+                    <div class="children" id="agents">
+                        <div class="description">        // agents IA selon leur fonction</div>
+                        <div class="node ai-agent">        ├── ai.claude   // rédaction de posts pour les réseaux</div>
+                        <div class="node ai-agent">        ├── ai.mail     // gestion mails & prospection</div>
+                        <div class="node ai-agent">        └── ai.make     // interface de publication et d'automatisation</div>
+                    </div>
+                </div>
+
+                <div class="node expandable" data-target="labovisuel">
+                    ├── <span class="highlight">labovisuel</span>
+                </div>
+                <div class="children" id="labovisuel">
+                    <div class="description">        // vitrine des images, concepts et projets créés par artists.oli</div>
+                    <div class="description">        // relayés et scénarisés par les ai.agents</div>
+                    <div class="node expandable" data-target="post1">        ├── post_01</div>
+                    <div class="children" id="post1">
+                        <div class="description">                // légende générée par IA / mots-clefs Notion</div>
+                        <div class="node">                MEDIA</div>
+                    </div>
+                    <div class="node expandable" data-target="post2">        └── post_02</div>
+                    <div class="children" id="post2">
+                        <div class="description">                // légende générée par IA / mots-clefs Notion</div>
+                        <div class="node">                MEDIA</div>
+                    </div>
+                    <!-- POSTS_PLACEHOLDER -->
+                </div>
+
+                <div class="node expandable" data-target="contact">
+                    └── <span class="highlight">contact</span>
+                </div>
+                <div class="children" id="contact">
+                    <div class="description">        // points d'entrée pour interagir avec le collectif</div>
+                    <div class="node ai-agent">        ├── ai.claude   // discuter avec un agent sur ce qu'est ai.oli</div>
+                    <div class="node">        ├── mail        // prestations & connexions avec artists.oli</div>
+                    <div class="node">        ├── insta       // suivre sur Instagram</div>
+                    <div class="node">        └── linkedin    // suivre sur LinkedIn</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>site généré par ai.claude <span class="blink">█</span> <a class="invert-link" onclick="toggleTheme()">/ invert colors</a></p>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('inverted');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-expand main on load
+            const mainNode = document.querySelector('[data-target="main"]');
+            const mainChildren = document.getElementById('main');
+            if (mainNode && mainChildren) {
+                mainChildren.classList.add('show');
+            }
+
+            // Handle expandable nodes
+            document.querySelectorAll('.expandable').forEach(node => {
+                node.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    const target = this.getAttribute('data-target');
+                    const children = document.getElementById(target);
+                    
+                    if (children) {
+                        children.classList.toggle('show');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
