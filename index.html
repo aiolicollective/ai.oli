@@ -56,11 +56,14 @@
         }
 
         .node {
-            margin: 5px 0;
+            margin-bottom: 0; /* pas d'espace par défaut */
+            line-height: 1.7; /* uniformise la hauteur de ligne */
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
+        .node + .children > .description {
+        margin-top: 4px; /* espace uniforme avant description */
+        }
         .node:hover {
             opacity: 0.7;
         }
@@ -72,10 +75,22 @@
         .children {
             display: none;
             margin-left: 20px;
-            padding-left: 15px;
+            padding-left: 20px;
             margin-top: 10px;
+            margin-bottom: 30px;
+        
+        }
+        /* Spécifique aux sous-niveaux d'artists.oli */
+        #artists > .children {
+            margin-bottom: 0px;
+            margin-top: 0px;
         }
 
+        /* Spécifique aux sous-niveaux d'ai.agents */
+        #agents > .children {
+            margin-bottom: 0px;
+            margin-top: 0px;
+        }
         .children.show {
             display: block;
             animation: slideDown 0.3s ease;
@@ -86,15 +101,11 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .description {
-            color: #aaaaaa;
-            font-style: italic;
+        .presentation {
+            color: currentColor;
             margin: 5px 0;
-            padding-left: 20px;
-        }
-
-        body.inverted .description {
-            color: #666666;
+            padding-left: 0px;
+            line-height: 1.5;
         }
 
         .highlight {
@@ -102,11 +113,24 @@
         }
 
         .ai-agent {
-            color: currentColor;
+            color: currentColor;;
+        }
+        #animated {
+            display: inline-block;
+            width: 1ch; 
+            text-align: center;
+            margin-right: 0ch; 
+            font-size: 1.1rem;
+        }
+        .description {
+            color: #aaaaaa;
+            font-style: italic;
+            margin: 5px 0;
+            padding-left: 0px;
         }
 
-        .artist {
-            color: currentColor;
+        body.inverted .description {
+            color: #666666;
         }
 
         .footer {
@@ -119,13 +143,44 @@
             font-size: 0.8rem;
         }
 
-        .blink {
-            animation: blink 1s infinite;
+        .invert-link {
+            color: currentColor;
+            text-decoration: none;
+            cursor: pointer;
+            border-bottom: 1px dotted currentColor;
+            margin-left: 10px;
         }
 
+        .invert-link:hover {
+            opacity: 0.7;
+                }
+        /* --- STYLE LIENS --- */
+        a:not(.invert-link) {
+        color: currentColor;
+        text-decoration: none;
+        transition: opacity 0.3s ease, color 0.3s ease;
+        }
+        a:not(.invert-link):hover {
+        opacity: 0.7;
+        }
+        /* on neutralise la bordure dans :visited pour ne pas l'appliquer partout */
+        a:not(.invert-link):visited {
+        color: currentColor;
+        border-bottom: none;
+        }
+
+        /* --- bordure pointillée UNIQUEMENT pour les liens dans la section "collectif" --- */
+        /* #collectif correspond à l'id present dans ton HTML */
+        #collectif a:not(.invert-link),
+        #collectif a:not(.invert-link):visited {
+        border-bottom: 1px dotted currentColor;
+}
         @keyframes blink {
             0%, 50% { opacity: 1; }
             51%, 100% { opacity: 0; }
+        }
+        .blink {
+            animation: blink 1s step-start infinite;
         }
 
         @media (max-width: 600px) {
@@ -146,84 +201,140 @@
             }
         }
     </style>
+    <link rel="icon" href="data:image/svg+xml,
+  <svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22>
+    <text y=%22.9em%22 font-size=%2290%22>></text>
+  </svg>">
 </head>
 <body>
     <div class="container">
         <div class="tree">
             <div class="node expandable" data-target="main">
-                <span class="highlight">/ai.oli</span>
+                <span id="animated">></span>
+                <span class="highlight" id="text-fixed"><b>ai.oli/</b></span>
             </div>
             <div class="children" id="main">
                 <div class="node expandable" data-target="collectif">
-                    ├── <span class="highlight">collectif hybride</span>
+                    ├── <span class="highlight">collectif hybride & créatif</span>
                 </div>
                 <div class="children" id="collectif">
-                    <div class="description">        // artists.oli + ai.agents réunis</div>
-                    <div class="description">        // l'IA filtre le bruit digital, orchestre la présence en ligne et gère la prospection</div>
-                    <div class="description">        // les artistes se consacrent à l'essentiel :</div>
-                    <div class="description">        // le processus créatif, l'expérimentation et la relation humaine</div>
-                    <div class="description">        // → IA = réseaux, prospection, bruit digital</div>
-                    <div class="description">        // → humain = création, exploration, dialogue</div>
+                    <div class="description">         //composé d'artistes et d'agents IA, /ai.oli est un collectif hybride consacré à la création et à la diffusons d'images, de vidéos et de concepts visuels. </div><BR>
+                    <div class="presentation">        Aujourd'hui, la visibilité des créatifs repose sur une présence régulière en ligne : publier, produire du contenu, prospecter ... Autant de tâches éloignées de nos motivations premières qui dispersent notre énergie dans un paysage saturé de discours et d'images standardisés.</div><BR>
+                    <div class="presentation">        /ai.oli propose un détournement : déléguer ces contraintes à l'intelligence artificielle pour se recentrer sur l'essentiel — le processus créatif et les relations humaines.</div><BR>
+                    <div class="presentation">        En référence à l'aïoli, sauce provençale symbole de mélange et de partage, /ai.oli incarne une hybridation marseillaise, généreuse et décalée.</div>
                     
                     <div class="node expandable" data-target="artists" style="margin-top: 20px;">
                         ├── <span class="artist">artists.oli</span>
                     </div>
                     <div class="children" id="artists">
-                        <div class="description">        // membres humains du collectif</div>
-                        <div class="node artist">        ├── corentin.oli   // bio, compétences, logiciels à préciser</div>
-                        <div class="node artist">        └── victor.oli     // bio, compétences, logiciels à préciser</div>
+                        <div class="description">        //membres humains du collectif</div>
+                        <div class="node artist expandable" data-target="corentin">        ├── corentin.oli</div>
+                        <div class="children" id="corentin">
+                            <div class="description">                //virtual spaces architect, <a href="https://www.ligotcorentin.com/" target="_blank">portfolio</a></div>
+                        </div>
+                        <div class="node artist expandable" data-target="victor">        └── victor.oli</div>
+                        <div class="children" id="victor">
+                            <div class="description">                //artiste 3D, <a href="https://visuvisu.webflow.io/" target="_blank">portfolio</a></div>
+                        </div>
                     </div>
 
                     <div class="node expandable" data-target="agents">
                         └── <span class="ai-agent">ai.agents</span>
                     </div>
                     <div class="children" id="agents">
-                        <div class="description">        // agents IA selon leur fonction</div>
-                        <div class="node ai-agent">        ├── ai.claude   // rédaction de posts pour les réseaux</div>
-                        <div class="node ai-agent">        ├── ai.mail     // gestion mails & prospection</div>
-                        <div class="node ai-agent">        └── ai.make     // interface de publication et d'automatisation</div>
+                        <div class="description">        //agents IA selon leur fonction</div>
+                        <div class="node ai-agent expandable" data-target="claude">        ├── ai.claude</div>
+                        <div class="children" id="claude">
+                            <div class="description">                // copywriter de posts pour les réseaux</div>
+                        </div>
+                        <div class="node ai-agent expandable" data-target="make">        └── ai.make</div>
+                        <div class="children" id="make">
+                            <div class="description">                // interface de publication et d'automatisation</div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="node expandable" data-target="labovisuel">
-                    ├── <span class="highlight">labovisuel</span>
+                    ├── <span class="highlight">labo visuel</span>
                 </div>
                 <div class="children" id="labovisuel">
-                    <div class="description">        // vitrine des images, concepts et projets créés par artists.oli</div>
-                    <div class="description">        // relayés et scénarisés par les ai.agents</div>
-                    <div class="node expandable" data-target="post1">        ├── post_01</div>
-                    <div class="children" id="post1">
-                        <div class="description">                // légende générée par IA / mots-clefs Notion</div>
-                        <div class="node">                MEDIA</div>
-                    </div>
-                    <div class="node expandable" data-target="post2">        └── post_02</div>
-                    <div class="children" id="post2">
-                        <div class="description">                // légende générée par IA / mots-clefs Notion</div>
-                        <div class="node">                MEDIA</div>
-                    </div>
-                    <div class="node expandable" data-target="post3">        └── post_03</div>
-<div class="children" id="post3">
-    <div class="description">                // ceci est la terrasse de corentin</div>
-    <div class="node">                MEDIA</div>
-</div>
-<div class="node expandable" data-target="post4">        └── post_04</div>
-<div class="children" id="post4">
-    <div class="description">                // mec ça marche on peut faire la bamboula avec des updates à gogo !</div>
-    <div class="node">                MEDIA</div>
-</div>
-<!-- POSTS_PLACEHOLDER -->
+                    <div class="description">        //Portfolio d'images, concepts et projets créés par artists.oli, relayés et scénarisés par les ai.agents</div>
+                    <div class="node">        <a href="#" data-post-id="1">├── post_01</a></div>
+                    <div class="description">                // légende générée par IA / mots-clefs Notion</div>
+                    <div class="node">        <a href="#" data-post-id="2">└── post_02</a></div>
+                    <div class="description">                // légende générée par IA / mots-clefs Notion</div>
+                    <!-- POSTS_PLACEHOLDER -->
                 </div>
 
                 <div class="node expandable" data-target="contact">
                     └── <span class="highlight">contact</span>
                 </div>
                 <div class="children" id="contact">
-                    <div class="description">        // points d'entrée pour interagir avec le collectif</div>
-                    <div class="node ai-agent">        ├── ai.claude   // discuter avec un agent sur ce qu'est ai.oli</div>
-                    <div class="node">        ├── mail        // prestations & connexions avec artists.oli</div>
-                    <div class="node">        ├── insta       // suivre sur Instagram</div>
-                    <div class="node">        └── linkedin    // suivre sur LinkedIn</div>
+                    <div class="node">        ├── <a href="mailto:aioli.collective@gmail.com" target="_blank">mail</a></div>
+                    <div class="node">        ├── <a href="https://www.instagram.com/aioli.collective/" target="_blank">instagram</a></div>
+                    <div class="node">        └── <a href="https://www.linkedin.com/company/aioli-collective" target="_blank">linkedin</a></div>
                 </div>
+                                <!-- VISUALIZER  -->
+                <div id="visualizer"></div>
+
+                <script src="visualizerimages.js"></script>
+                <script>
+                const v = document.getElementById('visualizer');
+
+                visualizerImages.forEach((u,i)=>{
+                    const img = document.createElement('img');
+                    img.src = u;
+                    if(i===0) img.classList.add('active');
+                    v.appendChild(img);
+                });
+
+                const imgs = v.querySelectorAll('img');
+                let i = 0, interval;
+
+                function start(){
+                    interval = setInterval(()=>{
+                    imgs[i].classList.remove('active');
+                    i = (i+1) % imgs.length;
+                    imgs[i].classList.add('active');
+                    },500);
+                }
+
+                function stop(){ clearInterval(interval); }
+
+                start();
+                v.addEventListener('mouseenter', stop);
+                v.addEventListener('mouseleave', start);
+                v.addEventListener('touchstart', stop);
+                v.addEventListener('touchend', start);
+                </script>
+
+                <style>
+                /* Visualizer s'adapte à la largeur de la container */
+                #visualizer {
+                    width: 100%;             /* largeur complète de la container */
+                    max-width: 800px;        /* même max-width que la container */
+                    height: 500px;           /* hauteur fixe, peut être ajustée */
+                    position: relative;
+                    overflow: hidden;
+                    margin: 40px auto 0;     /* marge top et centré horizontalement */
+                    background: inherit;
+                }
+
+                #visualizer img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    display: none;
+                }
+
+                #visualizer img.active {
+                    display: block;
+                }
+                </style>
+
             </div>
         </div>
 
@@ -260,5 +371,14 @@
             });
         });
     </script>
+    <script> // Animated symbol next to /ai.oli
+const characters = [">",">",">",">",">",">",">",">","→","↛","↝","↠","↣","↦","↱","↳","↷","⇀","⇉","⇏","⇌","⇒","⇛","⇘","⇗","⇝","⇢","⇨","➔","➙","➜","➥","➩","➪","➲","➻","↗","↘"];
+const animated = document.getElementById("animated");
+
+setInterval(() => {
+  const randomChar = characters[Math.floor(Math.random() * characters.length)];
+  animated.textContent = randomChar;}, 100);
+</script>
+
 </body>
 </html>
