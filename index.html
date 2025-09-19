@@ -274,68 +274,70 @@
                     <div class="node">        ├── <a href="https://www.instagram.com/aioli.collective/" target="_blank">instagram</a></div>
                     <div class="node">        └── <a href="https://www.linkedin.com/company/aioli-collective" target="_blank">linkedin</a></div>
                 </div>
-                                <!-- VISUALIZER  -->
-                <div id="visualizer"></div>
-
-                <script src="visualizerimages.js"></script>
-                <script>
-                const v = document.getElementById('visualizer');
-
-                visualizerImages.forEach((u,i)=>{
-                    const img = document.createElement('img');
-                    img.src = u;
-                    if(i===0) img.classList.add('active');
-                    v.appendChild(img);
-                });
-
-                const imgs = v.querySelectorAll('img');
-                let i = 0, interval;
-
-                function start(){
-                    interval = setInterval(()=>{
-                    imgs[i].classList.remove('active');
-                    i = (i+1) % imgs.length;
-                    imgs[i].classList.add('active');
-                    },500);
-                }
-
-                function stop(){ clearInterval(interval); }
-
-                start();
-                v.addEventListener('mouseenter', stop);
-                v.addEventListener('mouseleave', start);
-                v.addEventListener('touchstart', stop);
-                v.addEventListener('touchend', start);
-                </script>
-
-                <style>
-                /* Visualizer s'adapte à la largeur de la container */
-                #visualizer {
-                    width: 100%;             /* largeur complète de la container */
-                    max-width: 800px;        /* même max-width que la container */
-                    height: 500px;           /* hauteur fixe, peut être ajustée */
-                    position: relative;
-                    overflow: hidden;
-                    margin: 40px auto 0;     /* marge top et centré horizontalement */
-                    background: inherit;
-                }
-
-                #visualizer img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: contain;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    display: none;
-                }
-
-                #visualizer img.active {
-                    display: block;
-                }
-                </style>
-
             </div>
+                            <!-- VISUALIZER  -->
+            <div id="visualizer"></div>
+
+            <script src="visualizerimages.js"></script>
+            <script>
+            const v = document.getElementById('visualizer');
+
+            visualizerImages.forEach((u,i)=>{
+                const img = document.createElement('img');
+                img.src = u;
+                if(i===0) img.classList.add('active');
+                v.appendChild(img);
+            });
+
+            const imgs = v.querySelectorAll('img');
+            let i = 0, interval;
+
+            function start(){
+                interval = setInterval(()=>{
+                imgs[i].classList.remove('active');
+                i = (i+1) % imgs.length;
+                imgs[i].classList.add('active');
+                },500);
+            }
+
+            function stop(){ clearInterval(interval); }
+
+            start();
+            v.addEventListener('mouseenter', stop);
+            v.addEventListener('mouseleave', start);
+            v.addEventListener('touchstart', stop);
+            v.addEventListener('touchend', start);
+            </script>
+
+            <style>
+            /* Visualizer s'adapte à la largeur de la container */
+            #visualizer {
+                width: 100%;             /* largeur complète de la container */
+                max-width: 900px;        /* même max-width que la container */
+                height: 300px;           /* hauteur fixe, peut être ajustée */
+                position: relative;
+                top: 0;
+                bottom: 0;
+                overflow: hidden;
+                margin: 0px auto 0;     /* marge top et centré horizontalement */
+                background: inherit;
+            }
+
+            #visualizer img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                position: absolute;
+                top: 0;
+                left: 0;
+                display: none;
+            }
+
+            #visualizer img.active {
+                display: block;
+            }
+            </style>
+
         </div>
 
         <div class="footer">
