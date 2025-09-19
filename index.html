@@ -91,6 +91,10 @@
             margin-bottom: 0px;
             margin-top: 0px;
         }
+        #labovisuel > .children {
+            margin-bottom: 0px;
+            margin-top: 0px;
+        }
         .children.show {
             display: block;
             animation: slideDown 0.3s ease;
@@ -310,8 +314,17 @@
             start();
             v.addEventListener('mouseenter', stop);
             v.addEventListener('mouseleave', start);
-            v.addEventListener('touchstart', stop);
-            v.addEventListener('touchend', start);
+            v.addEventListener('touchstart', (e)=>{
+                e.preventDefault();
+                stop();
+            }, { passive: false });
+            v.addEventListener('touchend', (e)=>{
+                e.preventDefault();
+                start();
+            }, { passive: false });
+            v.addEventListener('contextmenu', (e)=>{
+                e.preventDefault(); 
+            });
             </script>
 
             <style>
@@ -326,6 +339,11 @@
                 overflow: hidden;
                 margin: 0px auto 0;     /* marge top et centré horizontalement */
                 background: inherit;
+                -webkit-touch-callout: none; 
+                -webkit-user-select: none;    
+                -moz-user-select: none;      
+                -ms-user-select: none;       
+                user-select: none;
             }
 
             #visualizer img {
@@ -336,6 +354,7 @@
                 top: 0;
                 left: 0;
                 display: none;
+                
             }
 
             #visualizer img.active {
@@ -379,7 +398,7 @@
         });
     </script>
     <script> // Animated symbol next to /ai.oli
-const characters = [">",">",">",">",">",">",">",">","→","↛","↝","↠","↣","↦","↱","↳","↷","⇀","⇉","⇏","⇌","⇒","⇛","⇘","⇗","⇝","⇢","⇨","➔","➙","➜","➥","➩","➪","➲","➻","↗","↘"];
+const characters = [">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">","→","↛","↝","↠","↣","↦","↱","↳","↷","⇀","⇉","⇏","⇌","⇒","⇛","⇘","⇗","⇝","⇢","⇨","➔","➙","➜","➥","➩","➪","➲","➻","↗","↘"];
 const animated = document.getElementById("animated");
 
 setInterval(() => {
