@@ -3,5 +3,6 @@ const visualizerImages = [
 "https://res.cloudinary.com/aioli/image/upload/v1758318574/aioli.collective/sdx45xspmoduna6nxzh8.png",
 "https://res.cloudinary.com/aioli/image/upload/v1758318772/aioli.collective/fnrjj1dubi6ic4cagaje.jpg",
 "https://res.cloudinary.com/aioli/image/upload/v1758323460/aioli.collective/tlmfxy1k7zyyhzha7z5t.jpg",
+"https://res.cloudinary.com/aioli/image/upload/v1758328589/aioli.collective/rc07k8q32xa9iuv33uon.jpg",
 //ANCHOR
 ];
