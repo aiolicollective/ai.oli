@@ -275,6 +275,7 @@
 <div class="node expandable" data-target="post8">        └── post_08</div>
 <div class="children" id="post8">
     <div class="description">                //test/slash/séparateur/upload auto/labo & visionneuse/espoir/doigts croisés</div>
+
     <div class="node">                MEDIA</div>
 </div>
 <!-- POSTS_PLACEHOLDER -->
@@ -311,7 +312,7 @@
                 imgs[i].classList.remove('active');
                 i = (i+1) % imgs.length;
                 imgs[i].classList.add('active');
-                },500);
+                },100);
             }
 
             function stop(){ clearInterval(interval); }
