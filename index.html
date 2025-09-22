@@ -124,7 +124,7 @@
             width: 1ch; 
             text-align: center;
             margin-right: 0ch; 
-            font-size: 1.1rem;
+            font-size: 0.9rem;
         }
         .description {
             color: #aaaaaa;
@@ -140,9 +140,8 @@
         .footer {
             margin-top: 60px;
             padding-top: 20px;
-            border-top: 1px solid currentColor;
             opacity: 0.5;
-            text-align: center;
+            text-align: left;
             color: currentColor;
             font-size: 0.8rem;
         }
@@ -225,7 +224,7 @@
                     <div class="description">         //composé d'artistes et d'agents IA, /ai.oli est un collectif hybride consacré à la création et à la diffusons d'images, de vidéos et de concepts visuels. </div><BR>
                     <div class="presentation">        Aujourd'hui, la visibilité des créatifs repose sur une présence régulière en ligne : publier, produire du contenu, prospecter ... Autant de tâches éloignées de nos motivations premières qui dispersent notre énergie dans un paysage saturé de discours et d'images standardisés.</div><BR>
                     <div class="presentation">        /ai.oli propose un détournement : déléguer ces contraintes à l'intelligence artificielle pour se recentrer sur l'essentiel — le processus créatif et les relations humaines.</div><BR>
-                    <div class="presentation">        En référence à l'aïoli, sauce provençale symbole de mélange et de partage, /ai.oli incarne une hybridation marseillaise, généreuse et décalée.</div>
+                    <div class="presentation">        En référence à l'aïoli, sauce provençale symbole de mélange et de partage, /ai.oli incarne une hybridation généreuse et décalée, basée à Marseille.</div>
                     
                     <div class="node expandable" data-target="artists" style="margin-top: 20px;">
                         ├── <span class="artist">artists.oli</span>
@@ -238,7 +237,7 @@
                         </div>
                         <div class="node artist expandable" data-target="victor">        └── victor.oli</div>
                         <div class="children" id="victor">
-                            <div class="description">                //artiste 3D, <a href="https://visuvisu.webflow.io/" target="_blank">portfolio</a></div>
+                            <div class="description">                //designer 3D, <a href="https://visuvisu.webflow.io/" target="_blank">portfolio</a></div>
                         </div>
                     </div>
 
@@ -263,74 +262,83 @@
                 </div>
                 <div class="children" id="labovisuel">
                     <div class="description">        //Portfolio d'images, concepts et projets créés par artists.oli, relayés et scénarisés par les ai.agents</div>
-                    <div class="node">        <a href="#" data-post-id="1">├── post_01</a></div>
-                    <div class="description">                // légende générée par IA / mots-clefs Notion</div>
-                    <div class="node">        <a href="#" data-post-id="2">└── post_02</a></div>
-                    <div class="description">                // légende générée par IA / mots-clefs Notion</div>
-                    <div class="node expandable" data-target="post7">        └── post_07</div>
-<div class="children" id="post7">
-    <div class="description">                // est ce que ce serait pas mieux comme ca</div>
-    <div class="node">                MEDIA</div>
-</div>
-<div class="node expandable" data-target="post8">        └── post_08</div>
-<div class="children" id="post8">
-    <div class="description">                //test/slash/séparateur/upload auto/labo & visionneuse/espoir/doigts croisés</div>
+                    <!-- POSTS_PLACEHOLDER -->
+                    <div class="node">        <a href="https://res.cloudinary.com/aioli/image/upload/v1758547538/khj9jkvtgnqahk1kgfxj.png" data-post-id="1" target="_blank">└── post_00</a></div>
+                    <div class="description">                //gourmand, convivial, méditerranéen, organique, lumineux, authentique</div>
 
-    <div class="node">                MEDIA</div>
-</div>
-<!-- POSTS_PLACEHOLDER -->
                 </div>
 
                 <div class="node expandable" data-target="contact">
                     └── <span class="highlight">contact</span>
                 </div>
                 <div class="children" id="contact">
-                    <div class="node">        ├── <a href="mailto:aioli.collective@gmail.com" target="_blank">mail</a></div>
                     <div class="node">        ├── <a href="https://www.instagram.com/aioli.collective/" target="_blank">instagram</a></div>
-                    <div class="node">        └── <a href="https://www.linkedin.com/company/aioli-collective" target="_blank">linkedin</a></div>
+                    <div class="node">        ├── <a href="https://www.linkedin.com/company/aioli-collective" target="_blank">linkedin</a></div>
+                    <div class="node">        └── <a href="mailto:aioli.collective@gmail.com" target="_blank">mail</a></div>
                 </div>
             </div>
                             <!-- VISUALIZER  -->
             <div id="visualizer"></div>
 
-            <script src="visualizerimages.js"></script>
             <script>
-            const v = document.getElementById('visualizer');
+                const visualizerImages = [
+                //URL_PLACEHOLDER
+                "https://res.cloudinary.com/aioli/image/upload/v1758548442/unbptommhrchjyy4uuoa.jpg",
+                "https://res.cloudinary.com/aioli/image/upload/v1758547538/khj9jkvtgnqahk1kgfxj.png",
+                "https://res.cloudinary.com/aioli/image/upload/v1758547538/eter7qqjpjwcndoio9qs.png",
+                "https://res.cloudinary.com/aioli/image/upload/v1758548221/gjt69iklgs0lwfnpjpf6.jpg",
+                "https://res.cloudinary.com/aioli/image/upload/v1758548197/myy52k0pjxtnft2efewu.jpg",
+                ];
+            
+                const v = document.getElementById('visualizer');
 
-            visualizerImages.forEach((u,i)=>{
-                const img = document.createElement('img');
-                img.src = u;
-                if(i===0) img.classList.add('active');
-                v.appendChild(img);
-            });
+                visualizerImages.forEach((u,i)=>{
+                    const img = document.createElement('img');
+                    img.src = u;
+                    if(i===0) img.classList.add('active');
+                    v.appendChild(img);
+                });
 
-            const imgs = v.querySelectorAll('img');
-            let i = 0, interval;
+                const imgs = v.querySelectorAll('img');
+                let i = 0, interval = null;
 
-            function start(){
-                interval = setInterval(()=>{
-                imgs[i].classList.remove('active');
-                i = (i+1) % imgs.length;
-                imgs[i].classList.add('active');
-                },2);
-            }
+                // Fonction pour démarrer le défilement
+                function start(){
+                    if(!interval){
+                        interval = setInterval(()=>{
+                            imgs[i].classList.remove('active');
+                            i = (i+1) % imgs.length;
+                            imgs[i].classList.add('active');
+                        }, 25); // vitesse en ms
+                    }
+                }
 
-            function stop(){ clearInterval(interval); }
+                // Fonction pour arrêter le défilement
+                function stop(){
+                    if(interval){
+                        clearInterval(interval);
+                        interval = null;
+                    }
+                }
 
-            start();
-            v.addEventListener('mouseenter', stop);
-            v.addEventListener('mouseleave', start);
-            v.addEventListener('touchstart', (e)=>{
-                e.preventDefault();
-                stop();
-            }, { passive: false });
-            v.addEventListener('touchend', (e)=>{
-                e.preventDefault();
-                start();
-            }, { passive: false });
-            v.addEventListener('contextmenu', (e)=>{
-                e.preventDefault(); 
-            });
+                // Au survol / touchstart → démarrage du défilement
+                v.addEventListener('mouseenter', start);
+                v.addEventListener('touchstart', (e)=>{
+                    e.preventDefault();
+                    start();
+                }, { passive: false });
+
+                // Quand la souris sort / touchend → arrêt du défilement
+                v.addEventListener('mouseleave', stop);
+                v.addEventListener('touchend', (e)=>{
+                    e.preventDefault();
+                    stop();
+                }, { passive: false });
+
+                // Bloquer le menu contextuel
+                v.addEventListener('contextmenu', (e)=>{
+                    e.preventDefault(); 
+                });
             </script>
 
             <style>
@@ -371,7 +379,7 @@
         </div>
 
         <div class="footer">
-            <p>site généré par ai.claude <span class="blink">█</span> <a class="invert-link" onclick="toggleTheme()">/ invert colors</a></p>
+            <p><a class="invert-link" onclick="toggleTheme()">invert colors</a>   / site généré par ai.claude <span class="blink">█</span></p>
         </div>
     </div>
 
@@ -404,7 +412,7 @@
         });
     </script>
     <script> // Animated symbol next to /ai.oli
-const characters = [">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">","→","↛","↝","↠","↣","↦","↱","↳","↷","⇀","⇉","⇏","⇌","⇒","⇛","⇘","⇗","⇝","⇢","⇨","➔","➙","➜","➥","➩","➪","➲","➻","↗","↘"];
+const characters = [">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">",">","~","#","{","(","[","-","|","`","/","<",">","*","+",")","]","}","=","&",";",",",":"];
 const animated = document.getElementById("animated");
 
 setInterval(() => {
