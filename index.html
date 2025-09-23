@@ -132,7 +132,13 @@
             margin: 5px 0;
             padding-left: 0px;
         }
+        .description.tags {
+            color: #aaaaaa;
+            font-style: italic;
+            margin: 5px 0;
+            padding-left: 35px;
 
+        }
         body.inverted .description {
             color: #666666;
         }
@@ -230,7 +236,7 @@
                         ├── <span class="artist">artists.oli</span>
                     </div>
                     <div class="children" id="artists">
-                        <div class="description">        //membres humains du collectif</div>
+                        <div class="description">        //artistes menbres du collectif</div>
                         <div class="node artist expandable" data-target="corentin">        ├── corentin.oli</div>
                         <div class="children" id="corentin">
                             <div class="description">                //virtual spaces architect, <a href="https://www.ligotcorentin.com/" target="_blank">portfolio</a></div>
@@ -261,10 +267,10 @@
                     ├── <span class="highlight">labo visuel</span>
                 </div>
                 <div class="children" id="labovisuel">
-                    <div class="description">        //Portfolio d'images, concepts et projets créés par artists.oli, relayés et scénarisés par les ai.agents</div>
+                    <div class="description">        //Vitrine d'images, concepts et projets créés par les artists.oli, relayés et scénarisés par les ai.agents</div>
                     <!-- POSTS_PLACEHOLDER -->
-                    <div class="node">        <a href="https://res.cloudinary.com/aioli/image/upload/v1758547538/khj9jkvtgnqahk1kgfxj.png" data-post-id="1" target="_blank">└── post_00</a></div>
-                    <div class="description">                //gourmand, convivial, méditerranéen, organique, lumineux, authentique</div>
+                    <div class="node">        <a href="https://res.cloudinary.com/aioli/image/upload/v1758547538/khj9jkvtgnqahk1kgfxj.png" data-post-id="1" target="_blank">└── post_1</a></div>
+                    <div class="description tags">                //aïoli, Flux.1 Kontext, lancement, collectif, Marseille</div>
 
                 </div>
 
@@ -280,101 +286,110 @@
                             <!-- VISUALIZER  -->
             <div id="visualizer"></div>
 
-            <script>
-                const visualizerImages = [
-                //URL_PLACEHOLDER
-                "https://res.cloudinary.com/aioli/image/upload/v1758548442/unbptommhrchjyy4uuoa.jpg",
-                "https://res.cloudinary.com/aioli/image/upload/v1758547538/khj9jkvtgnqahk1kgfxj.png",
-                "https://res.cloudinary.com/aioli/image/upload/v1758547538/eter7qqjpjwcndoio9qs.png",
-                "https://res.cloudinary.com/aioli/image/upload/v1758548221/gjt69iklgs0lwfnpjpf6.jpg",
-                "https://res.cloudinary.com/aioli/image/upload/v1758548197/myy52k0pjxtnft2efewu.jpg",
-                ];
-            
-                const v = document.getElementById('visualizer');
+                <script>
+                    const visualizerMedia = [
+                        //URL_PLACEHOLDER
+                        "https://res.cloudinary.com/aioli/image/upload/v1758547538/khj9jkvtgnqahk1kgfxj.png",
+                    ];
+                    
+                    const v = document.getElementById('visualizer');
 
-                visualizerImages.forEach((u,i)=>{
-                    const img = document.createElement('img');
-                    img.src = u;
-                    if(i===0) img.classList.add('active');
-                    v.appendChild(img);
-                });
+                    visualizerMedia.forEach((u, i) => {
+                        let el;
+                        if (u.match(/\.(mp4|webm|ogg)$/i)) {
+                            // Si c’est une vidéo
+                            el = document.createElement('video');
+                            el.src = u;
+                            el.loop = true;
+                            el.muted = true;
+                            el.autoplay = true;
+                            el.playsInline = true; 
+                        } else {
+                            // Sinon image
+                            el = document.createElement('img');
+                            el.src = u;
+                        }
 
-                const imgs = v.querySelectorAll('img');
-                let i = 0, interval = null;
+                        if (i === 0) el.classList.add('active');
+                        v.appendChild(el);
+                    });
 
-                // Fonction pour démarrer le défilement
-                function start(){
-                    if(!interval){
-                        interval = setInterval(()=>{
-                            imgs[i].classList.remove('active');
-                            i = (i+1) % imgs.length;
-                            imgs[i].classList.add('active');
-                        }, 25); // vitesse en ms
+                    const media = v.querySelectorAll('img, video');
+                    let i = 0, interval = null;
+
+                    // Fonction pour démarrer le défilement
+                    function start(){
+                        if(!interval){
+                            interval = setInterval(()=>{
+                                media[i].classList.remove('active');
+                                i = (i+1) % media.length;
+                                media[i].classList.add('active');
+                            }, 25); // vitesse en ms
+                        }
                     }
+
+                    // Fonction pour arrêter le défilement
+                    function stop(){
+                        if(interval){
+                            clearInterval(interval);
+                            interval = null;
+                        }
+                    }
+
+                    // Au survol / touchstart → démarrage du défilement
+                    v.addEventListener('mouseenter', start);
+                    v.addEventListener('touchstart', (e)=>{
+                        e.preventDefault();
+                        start();
+                    }, { passive: false });
+
+                    // Quand la souris sort / touchend → arrêt du défilement
+                    v.addEventListener('mouseleave', stop);
+                    v.addEventListener('touchend', (e)=>{
+                        e.preventDefault();
+                        stop();
+                    }, { passive: false });
+
+                    // Bloquer le menu contextuel
+                    v.addEventListener('contextmenu', (e)=>{
+                        e.preventDefault(); 
+                    });
+                </script>
+
+                <style>
+                /* Visualizer s'adapte à la largeur de la container */
+                #visualizer {
+                    width: 100%;
+                    max-width: 900px;
+                    height: 300px;
+                    position: relative;
+                    overflow: hidden;
+                    margin: 0 auto;
+                    background: inherit;
+                    -webkit-touch-callout: none; 
+                    -webkit-user-select: none;    
+                    -moz-user-select: none;      
+                    -ms-user-select: none;       
+                    user-select: none;
                 }
 
-                // Fonction pour arrêter le défilement
-                function stop(){
-                    if(interval){
-                        clearInterval(interval);
-                        interval = null;
-                    }
+                #visualizer img,
+                #visualizer video {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    display: none;
                 }
 
-                // Au survol / touchstart → démarrage du défilement
-                v.addEventListener('mouseenter', start);
-                v.addEventListener('touchstart', (e)=>{
-                    e.preventDefault();
-                    start();
-                }, { passive: false });
+                #visualizer img.active,
+                #visualizer video.active {
+                    display: block;
+                }
+                </style>
 
-                // Quand la souris sort / touchend → arrêt du défilement
-                v.addEventListener('mouseleave', stop);
-                v.addEventListener('touchend', (e)=>{
-                    e.preventDefault();
-                    stop();
-                }, { passive: false });
-
-                // Bloquer le menu contextuel
-                v.addEventListener('contextmenu', (e)=>{
-                    e.preventDefault(); 
-                });
-            </script>
-
-            <style>
-            /* Visualizer s'adapte à la largeur de la container */
-            #visualizer {
-                width: 100%;             /* largeur complète de la container */
-                max-width: 900px;        /* même max-width que la container */
-                height: 300px;           /* hauteur fixe, peut être ajustée */
-                position: relative;
-                top: 0;
-                bottom: 0;
-                overflow: hidden;
-                margin: 0px auto 0;     /* marge top et centré horizontalement */
-                background: inherit;
-                -webkit-touch-callout: none; 
-                -webkit-user-select: none;    
-                -moz-user-select: none;      
-                -ms-user-select: none;       
-                user-select: none;
-            }
-
-            #visualizer img {
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-                position: absolute;
-                top: 0;
-                left: 0;
-                display: none;
-                
-            }
-
-            #visualizer img.active {
-                display: block;
-            }
-            </style>
 
         </div>
 
