@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Artificial Erosion Viewer</title>
+<style>
+body {
+  margin:0; padding:0;
+  font-family: "Courier New", monospace;
+  font-weight:bold;
+  color:white;
+  background:black;
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+  overflow:hidden;
+}
+
+/* Barre top transversale */
+#topBar {
+  width:100%;
+  height:80px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 20px;
+  background:black;
+  border-bottom:2px solid white;
+  z-index:10;
+  flex-shrink:0;
+  font-size:1.5em;
+  box-sizing:border-box;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+/* Conteneur colonnes */
+#mainContainer {
+  flex:1;
+  display:flex;
+  overflow:hidden;
+}
+
+/* Colonne gauche : about */
+#aboutPanel {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  padding:20px;
+  border-right:3px solid white;
+  background:black;
+  overflow:auto;
+}
+#aboutPanel button {
+  margin-top:10px;
+  padding:6px;
+  font-family: monospace;
+  font-weight:bold;
+  background:black;
+  color:white;
+  border:2px solid white;
+  cursor:pointer;
+  text-decoration:none;
+}
+#aboutPanel button:hover {
+  background:white;
+  color:black;
+}
+
+#aboutPanel a {
+  color: white;
+  text-decoration: none;
+  border-bottom: 2px dotted white;
+  transition: color 0.1s;
+}
+
+#aboutPanel a:hover {
+  color: #bbb;
+  border-bottom-color: #bbb;
+}
+
+#aboutPanel a:visited,
+#aboutPanel a:active,
+#aboutPanel a:focus {
+  color: white; /* aucun changement après clic */
+  border-bottom-color: white;
+  outline: none;
+}
+/* Colonne centrale : visualisation */
+#leftPanel {
+  flex:3;
+  position:relative;
+  background:black;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  overflow:hidden;
+  border-right:3px solid white;
+}
+
+/* Grille de points */
+#visualisation {
+  flex:1;
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+  overflow:hidden;
+}
+#visualisation::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; bottom:0;
+  background-image: radial-gradient(white 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity:0.5;
+  pointer-events:none;
+}
+
+/* Barre overlay sous image pour navigation */
+#overlayControls {
+  position:absolute;
+  bottom:10px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  z-index:5;
+}
+/* Boutons minimalistes overlay */
+#overlayControls button{
+  background:none;
+  border:none;
+  color:white;
+  font-size:1.5em;
+  cursor:pointer;
+  padding:0;
+}
+#overlayControls button:hover{
+  color:gray;
+}
+
+/* Barre bottom info */
+#bottomInfo {
+  width:100%;
+  height:25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 10px;
+  font-size:0.9em;
+  border-top:2px solid white;
+  background:rgba(0,0,0,0.3);
+  flex-shrink:0;
+}
+
+/* Image */
+#slideshowImage {
+  max-width:90%; max-height:90%;
+  border:2px solid white;
+}
+
+/* Nom de la série sous image */
+#seriesUnderImage {
+  text-align:center;
+  padding:5px;
+  font-size:1em;
+  border-top:2px solid white;
+  margin-top:2px;
+  width:100%;
+  box-sizing:border-box;
+}
+
+/* Slider navigation et FPS */
+input[type=range]{
+  width:90%;
+  margin:5px auto;
+  -webkit-appearance:none;
+  background:black;
+  border:2px solid white;
+  height:6px;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:12px;
+  height:12px;
+  background:white;
+  cursor:pointer;
+}
+input[type=range]::-moz-range-thumb{
+  width:12px; height:12px; background:white; cursor:pointer;
+}
+
+/* Colonne droite */
+#controlsPanel {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  padding:20px;
+  background:black;
+  overflow:hidden;
+}
+#dropZone {
+  padding:35px;
+  border:3px dashed white;
+  text-align:center;
+  cursor:pointer;
+  font-size:1em;
+  margin-bottom:10px;
+  min-height:100px;
+}
+/* Tableur brutaliste */
+#dataTable{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:0;
+  border-top:3px solid white;
+  border-left:3px solid white;
+  flex:1;
+  overflow-y:auto;
+}
+.dataCell{
+  border-right:3px solid white;
+  border-bottom:3px solid white;
+  padding:3px 6px;
+  font-size:0.75em;
+  white-space: pre-wrap;
+  background:black;
+  transition: background 0.1s;
+}
+.dataCell.inline{
+  white-space: pre-wrap;
+}
+
+/* Status et progress */
+#status{
+  word-break: break-all;
+  border-top:1px solid white;
+  padding-top:4px;
+}
+#progressBar{
+  width:100%; height:12px;
+  background:black;
+  border:1px solid white;
+  margin-bottom:10px;
+}
+#progressFill{
+  height:100%; width:0%;
+  background:white;
+  transition: width 0.1s;
+}
+
+/* Bouton Export brutaliste */
+#exportBtn{
+  padding:8px;
+  font-family: monospace;
+  font-weight:bold;
+  background:black;
+  color:white;
+  border:2px solid white;
+  cursor:pointer;
+  margin-bottom:10px;
+}
+#exportBtn:hover{
+  background:white;
+  color:black;
+}
+
+canvas{display:none;}
+</style>
+</head>
+<body>
+
+<!-- Barre top transversale -->
+<div id="topBar">
+  <div>ARTIFICIAL_EROSION</div>
+  <div id="seriesTitleTop">-</div>
+</div>
+
+<div id="mainContainer">
+ <!-- Colonne gauche -->
+<div id="aboutPanel">
+  <!-- Texte About FR -->
+  <div id="descFR">
+    <pre style="white-space: pre-wrap;">
+<div style="font-size: 20px;">INSTRUCTIONS</div>
+<b>ARTIFICIALEROSION.JSON</b>
+
+- Érosion artificielle par (dé)générations itératives utilisant l'IA
+- Flux1-dev.safestensors
+- Gen.N utilise Gen.N-1 comme image d’entrée
+- X % de bruit entre chaque génération (Paramètre workflow)
+
+<b>1. TÉLÉCHARGER LE WORKFLOW :</b>
+
+Téléchargez le workflow ComfyUI en cliquant sur le bouton ci-dessous.
+
+<b>2. ÉRODER :</b>
+
+Suivre les instructions incluses dans le workflow.
+
+<b>3. VISUALISER ET EXPORTER :</b>
+
+  1. Glissez-déposez les fichiers .txt dans l'encart en haut à droite de cette interface.
+  2. Ajustez la vitesse
+  3. Cliquez sur "Exporter WebM"
+
+/ai.oli x corentin.oli
+<b>N'hésitez pas à partager vos (dé)génération avec nous</b>
+- <a href="https://www.instagram.com/aioli.collective/">Instagram</a>
+- <a href="https://www.linkedin.com/company/aioli-collective/">LinkedIn</a>
+- <a href="mailto:aioli.collective@gmail.com">Mail</a>
+    </pre>
+  </div>
+
+  <!-- Texte About EN -->
+  <div id="descEN" style="display:none;">
+    <pre style="white-space: pre-wrap;">
+<div style="font-size: 20px;">INSTRUCTIONS</div>
+<b>ARTIFICIALEROSION.JSON</b>
+
+- Artificial erosion by iterative (de)generations using AI
+- Flux1-dev.safestensors
+- Gen.N uses Gen.N-1 as input image
+- X % noise between each generation (workflow parameter)
+
+<b>1. DOWNLOAD THE WORKFLOW:</b>
+
+Download the ComfyUI workflow by clicking the button below.
+
+<b>2. ERODE:</b>
+
+Follow the instructions included in the workflow.
+
+<b>3. VISUALIZE AND EXPORT:</b>
+
+  1. Drag and drop the .txt files into the panel at the top right of this interface.
+  2. Adjust the speed
+  3. Click "Export WebM"
+
+/ai.oli x corentin.oli
+<b>Feel free to share your (de)generation with us</b>
+
+- <a href="https://www.instagram.com/aioli.collective/">Instagram</a>
+- <a href="https://www.linkedin.com/company/aioli-collective/">LinkedIn</a>
+- <a href="mailto:aioli.collective@gmail.com">Mail</a>
+    </pre>
+  </div>
+
+  <!-- Switch FR/EN -->
+  <button id="switchLang">FR/EN</button>
+
+  <!-- Bouton téléchargement workflow -->
+  <button id="downloadWorkflow">Download Workflow</button>
+
+  <div style="flex:1"></div> <!-- espace flexible -->
+
+  <!-- Footer clignotant -->
+  <div id="aboutFooter" style="text-align:left; font-family: monospace; font-weight:bold; margin-top:5px;">
+    Interface by corentin.oli x ai.claude <span id="blinkCursor">█</span>
+  </div>
+</div>
+
+  <!-- Colonne centrale -->
+  <div id="leftPanel">
+    <div id="visualisation">
+      <img id="slideshowImage" src="" alt="">
+      <div id="overlayControls">
+        <button id="playBtn">▶</button>
+        <button id="pauseBtn">⏸</button>
+      </div>
+    </div>
+    <div id="seriesUnderImage">-</div>
+    <input type="range" id="animSlider" min="1" max="1" value="1">
+    <div id="bottomInfo">
+      <div id="genInfo">GEN 0/0</div>
+      <div id="fpsInfo">FPS: 0</div>
+    </div>
+  </div>
+
+  <!-- Colonne droite -->
+  <div id="controlsPanel">
+    <div id="dropZone">Glisse-dépose tes fichiers .txt ici</div>
+    <label>Vitesse / FPS : <span id="speedValue">6</span></label>
+    <input type="range" id="speedSlider" min="1" max="90" value="6">
+    <button id="exportBtn">Exporter WebM</button>
+    <div id="status">Aucun fichier chargé</div>
+    <div id="progressBar"><div id="progressFill"></div></div>
+    <div id="dataTable"></div>
+  </div>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+let images=[], currentIndex=0, interval=null;
+const slideshowImg=document.getElementById("slideshowImage");
+const speedSlider=document.getElementById("speedSlider");
+const speedValue=document.getElementById("speedValue");
+const animSlider=document.getElementById("animSlider");
+const dropZone=document.getElementById("dropZone");
+const statusDiv=document.getElementById("status");
+const progressFill=document.getElementById("progressFill");
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+const seriesTitleTop=document.getElementById("seriesTitleTop");
+const seriesUnderImage=document.getElementById("seriesUnderImage");
+const dataTable=document.getElementById("dataTable");
+const genInfo=document.getElementById("genInfo");
+const fpsInfo=document.getElementById("fpsInfo");
+const descFR=document.getElementById("descFR");
+const descEN=document.getElementById("descEN");
+const switchLang=document.getElementById("switchLang");
+const playBtn=document.getElementById("playBtn");
+const pauseBtn=document.getElementById("pauseBtn");
+const exportBtn=document.getElementById("exportBtn");
+const blinkCursor = document.getElementById("blinkCursor");
+
+// --- Chargement du json de preview ---
+fetch('preview.json')
+  .then(res => res.json())
+  .then(data => {
+    images = data;
+    currentIndex = 0;
+    if(images.length > 0){
+      seriesTitleTop.textContent = images[0].name.replace(/\d+/g,''); // juste le nom sans numéro
+      startSlideshow(parseInt(speedSlider.value));
+      renderData(currentIndex);
+    }
+  })
+  .catch(err => console.error('Erreur loading preview.json:', err));
+
+// Switch FR/EN
+switchLang.addEventListener("click",()=>{
+  if(descFR.style.display=="none"){descFR.style.display="block"; descEN.style.display="none";}
+  else {descFR.style.display="none"; descEN.style.display="block";}
+});
+
+// Téléchargement workflow
+document.getElementById("downloadWorkflow").addEventListener("click", () => {
+  window.open("https://drive.google.com/file/d/1Fv1xhm6FssoTwKEIT9qtD55xN3V4BZLk/view?usp=sharing", "_blank");
+});
+
+// Curseur clignotant lié aux FPS
+let blinkVisible=true;
+setInterval(()=>{
+  blinkVisible=!blinkVisible;
+  blinkCursor.style.visibility=blinkVisible?"visible":"hidden";
+},1000/parseInt(speedSlider.value||6));
+
+function setStatus(txt,color="white"){statusDiv.style.color=color; statusDiv.textContent=txt;}
+function setProgress(p){progressFill.style.width=p+"%";}
+
+function renderData(index){
+  dataTable.innerHTML="";
+  if(!images.length) return;
+  const img=images[index];
+  const div1=document.createElement("div");
+  div1.className="dataCell inline";
+  div1.textContent="Nom: "+img.name+"\nTaille: "+img.size+" bytes";
+  dataTable.appendChild(div1);
+  let base64Text=img.data.replace(/^data:image\/png;base64,/,'');
+  base64Text=base64Text.match(/.{1,60}/g)?.slice(0,12).join('\n') || '';
+  const div2=document.createElement("div");
+  div2.className="dataCell";
+  div2.textContent="Base64:\n"+base64Text;
+  dataTable.appendChild(div2);
+  const div3=document.createElement("div");
+  div3.className="dataCell";
+  div3.textContent="Type MIME: image/png\nApproxSize: "+Math.round(img.size/1024)+" KB\nTimestamp: "+Date.now();
+  dataTable.appendChild(div3);
+}
+
+function updateDisplay(){
+  slideshowImg.src=images[currentIndex].data;
+  renderData(currentIndex);
+  genInfo.textContent=`GEN ${currentIndex+1}/${images.length}`;
+  fpsInfo.textContent=`FPS: ${speedSlider.value}`;
+  animSlider.max=images.length;
+  animSlider.value=currentIndex+1;
+  seriesUnderImage.textContent=`ARTIFICIAL_EROSION ${images[currentIndex]?.name.replace(/\d+/g,'').replace('.txt','') || ''}`;
+}
+
+function startSlideshow(fps){
+  if(!images.length) return;
+  updateDisplay();
+  clearInterval(interval);
+  interval=setInterval(()=>{
+    currentIndex=(currentIndex+1)%images.length;
+    updateDisplay();
+  },1000/fps);
+}
+function pauseSlideshow(){clearInterval(interval);}
+
+speedSlider.addEventListener("input",()=>{
+  speedValue.textContent=speedSlider.value;
+  startSlideshow(parseInt(speedSlider.value));
+});
+
+animSlider.addEventListener("input",()=>{
+  pauseSlideshow();
+  currentIndex=parseInt(animSlider.value)-1;
+  updateDisplay();
+});
+
+playBtn.addEventListener("click",()=>startSlideshow(parseInt(speedSlider.value)));
+pauseBtn.addEventListener("click",pauseSlideshow);
+
+// Drag & Drop
+dropZone.addEventListener("dragover",e=>{e.preventDefault(); dropZone.style.borderColor="white";});
+dropZone.addEventListener("dragleave",e=>{e.preventDefault(); dropZone.style.borderColor="white";});
+dropZone.addEventListener("drop",e=>{
+  e.preventDefault(); dropZone.style.borderColor="white";
+  const files=Array.from(e.dataTransfer.files).filter(f=>f.name.endsWith(".txt"));
+  if(files.length===0){alert("Aucun fichier .txt détecté"); return;}
+  files.sort((a,b)=>parseInt(a.name.match(/\d+/)?.[0]||0)-parseInt(b.name.match(/\d+/)?.[0]||0));
+  images=[]; let loaded=0;
+  const firstName = files[0].name.replace(/\d+/g,'').replace('.txt','');
+  seriesTitleTop.textContent = firstName;
+  files.forEach((file,i)=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const base64=ev.target.result.trim();
+      images[i]={name:file.name,data:"data:image/png;base64,"+base64,size:file.size};
+      loaded++;
+      if(loaded===files.length){
+        currentIndex=0;
+        startSlideshow(parseInt(speedSlider.value));
+        setStatus(`Chargé ${images.length} images`);
+        setProgress(0);
+      }
+    };
+    reader.readAsText(file);
+  });
+});
+
+// Export WebM
+exportBtn.onclick = async () => {
+  if (!images.length) { alert("Aucune image chargée"); return; }
+  const fps = parseInt(speedSlider.value);
+
+  // Créer une image temporaire pour récupérer la taille
+  const tempImg = new Image();
+  tempImg.src = images[0].data;
+  await new Promise(r => tempImg.onload = r);
+
+  const width = tempImg.width;
+  const height = tempImg.height;
+
+  canvas.width = width;
+  canvas.height = height;
+
+  const stream = canvas.captureStream(fps);
+  const recorder = new MediaRecorder(stream, { mimeType: "video/webm", videoBitsPerSecond: 5000000 });
+  const chunks = [];
+
+  recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+  recorder.onstop = () => {
+    const blob = new Blob(chunks, { type: "video/webm" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = "sequence.webm"; a.click();
+    setStatus("Vidéo WebM exportée ✔️"); setProgress(100);
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+  };
+
+  recorder.start();
+  setStatus("Génération vidéo… ⏳"); setProgress(0);
+
+  for (let i = 0; i < images.length; i++) {
+    await new Promise(r => setTimeout(r, 1000 / fps));
+    const img = new Image();
+    img.src = images[i].data;
+    await new Promise(r => { img.onload = () => { ctx.clearRect(0, 0, width, height); ctx.drawImage(img, 0, 0); r(); } });
+    setProgress(Math.round((i + 1) / images.length * 100));
+  }
+
+  recorder.stop();
+};
+
+</script>
+</body>
+</html>
