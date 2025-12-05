@@ -355,6 +355,9 @@ Follow the instructions included in the workflow.
   <!-- Bouton téléchargement workflow -->
   <button id="downloadWorkflow">Download Workflow</button>
 
+    <!-- Bouton visit website -->
+  <button id="visitWebsite">Visit /ai.oli website</button>
+
   <div style="flex:1"></div> <!-- espace flexible -->
 
   <!-- Footer clignotant -->
@@ -441,6 +444,11 @@ switchLang.addEventListener("click",()=>{
 // Téléchargement workflow
 document.getElementById("downloadWorkflow").addEventListener("click", () => {
   window.open("https://drive.google.com/file/d/1Fv1xhm6FssoTwKEIT9qtD55xN3V4BZLk/view?usp=sharing", "_blank");
+});
+
+// visitWebsite
+document.getElementById("visitWebsite").addEventListener("click", () => {
+  window.open("https://aiolicollective.com/", "_blank");
 });
 
 // Curseur clignotant lié aux FPS
