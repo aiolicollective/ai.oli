@@ -422,7 +422,7 @@ const exportBtn=document.getElementById("exportBtn");
 const blinkCursor = document.getElementById("blinkCursor");
 
 // --- Chargement du json de preview ---
-fetch('preview.json')
+fetch('artificialerosion/preview.json')
   .then(res => res.json())
   .then(data => {
     images = data;
@@ -444,8 +444,8 @@ switchLang.addEventListener("click",()=>{
 // Téléchargement workflow
 document.getElementById("downloadWorkflow").addEventListener("click", () => {
   const a = document.createElement("a");
-  a.href = "artificial_errosion_workflow.json"; 
-  a.download = "artificial_errosion_workflow.json";
+  a.href = "artificialerosion/artificialerosion_workflow.json"; 
+  a.download = "artificialerosion_workflow.json";
   a.click();
 });
 
