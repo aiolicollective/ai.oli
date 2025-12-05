@@ -443,7 +443,10 @@ switchLang.addEventListener("click",()=>{
 
 // Téléchargement workflow
 document.getElementById("downloadWorkflow").addEventListener("click", () => {
-  window.open("https://drive.google.com/file/d/1Fv1xhm6FssoTwKEIT9qtD55xN3V4BZLk/view?usp=sharing", "_blank");
+  const a = document.createElement("a");
+  a.href = "artificial_errosion_workflow.json"; 
+  a.download = "artificial_errosion_workflow.json";
+  a.click();
 });
 
 // visitWebsite
